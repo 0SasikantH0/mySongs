@@ -1,12 +1,19 @@
 package mysongs.com.allgo.mysongs;
 
+import android.app.Service;
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
+    LinearLayout linearLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +30,19 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         setContentView(R.layout.activity_main);
+        linearLayout = (LinearLayout) findViewById(R.id.linearlayer1);        //Adding 2 TextViews
+        for (int i = 1; i <= 5; i++) {
+            Button newButton = new Button(this);
+            newButton.setWidth(200);
+            newButton.setHeight(200);
+            newButton.setBackgroundColor(Color.parseColor("#ffffff"));
+            linearLayout.addView(newButton);
+        }
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new CustomPagerAdapter(this));
+        viewPager.setNestedScrollingEnabled(false);
+
     }
 
     @Override
@@ -57,5 +77,5 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         super.onPause();
-        }
+    }
 }
