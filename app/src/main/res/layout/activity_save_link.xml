@@ -1,45 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     tools:context="mysongs.com.allgo.mysongs.SaveLInkActivity">
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="65dp" />
+    <RelativeLayout
+        android:id="@+id/topnavigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#ffffff">
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="148dp" />
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="11dp"
+            android:src="@drawable/mainlogo" />
+    </RelativeLayout>
 
-    <EditText
-        android:id="@+id/editText3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="236dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topnavigation"
+        android:layout_centerVertical="true">
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/formlinearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="150dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/roundedcorners"
+            android:elevation="100dp"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="60dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Wanna add new link? Cool!!!"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="21dp" />
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="#00000000"
+                android:ems="10"
+                android:fontFamily="sans-serif-condensed"
+                android:hint="Link"
+                android:inputType="textPersonName"
+                android:textColor="#ffffff"
+                android:textColorHint="#cccccc"
+                android:textSize="18dp"
+                tools:layout_editor_absoluteX="85dp"
+                tools:layout_editor_absoluteY="148dp" />
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="#00000000"
+                android:ems="10"
+                android:fontFamily="sans-serif-condensed"
+                android:hint="Song Name"
+                android:inputType="textPersonName"
+                android:textColor="#ffffff"
+                android:textColorHint="#cccccc"
+                android:textSize="18dp"
+                tools:layout_editor_absoluteX="85dp"
+                tools:layout_editor_absoluteY="65dp" />
+
+            <RelativeLayout
+                android:id="@+id/langaugerelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
+
+                <TextView
+                    android:id="@+id/languagehead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="11dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Language"
+                    android:textColor="#ffffff"
+                    android:textSize="18dp" />
+
+                <HorizontalScrollView
+                    android:id="@+id/hlanguagescroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/languagehead"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/languagelinearlayer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/moodrelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
+
+                <TextView
+                    android:id="@+id/moodhead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="11dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Mood"
+                    android:textColor="#ffffff"
+                    android:textSize="18dp" />
+
+                <HorizontalScrollView
+                    android:id="@+id/hmoodscroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/moodhead"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/moodlinearlayer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/playlistrelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp">
+
+                <TextView
+                    android:id="@+id/playlisthead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="11dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Playlist"
+                    android:textColor="#ffffff"
+                    android:textSize="18dp" />
+
+                <HorizontalScrollView
+                    android:id="@+id/hplaylistcroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/playlisthead"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/playlistlinearlayer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/addlinkbutton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="60dp"
+                    android:background="@drawable/addroundbutton"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Add Link"
+                    android:textColor="#ff00518a" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

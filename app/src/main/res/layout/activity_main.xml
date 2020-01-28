@@ -2,106 +2,328 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1a1a1a"
+    android:background="#303030"
     android:scrollbars="none"
     tools:context="mysongs.com.allgo.mysongs.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/topnavigation"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="#cfcfcf">
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_centerHorizontal="true"
                 android:paddingTop="11dp"
-                android:src="@drawable/mainlogo" />
+                android:src="@drawable/monomainlogo" />
         </RelativeLayout>
 
-        <android.support.v4.view.ViewPager
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="260dp"
             android:layout_below="@+id/topnavigation"
             android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:id="@+id/head1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/viewpager"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif-condensed"
-            android:text="Telugu"
-            android:layout_marginTop="20dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold|italic" />
-        <RelativeLayout
-            android:id="@+id/appLayout1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/head1"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
-            <HorizontalScrollView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/viewpager"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/topChartsRelativeLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/hscroll1"
-                android:scrollbars="none" >
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:paddingTop="40dp"
-                    android:layout_height="150dp"
-                    android:id="@+id/linearlayer1"
-                    android:orientation="horizontal" >
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/bTwine"
-                        android:padding="20dp"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_marginRight="60dp"
-                        android:clickable="true" />
+                    <TextView
+                        android:id="@+id/topcharthead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="40dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Top Charts"
+                        android:textColor="#ffffff"
+                        android:textSize="18dp"
+                        android:textStyle="bold|italic" />
+
+                    <TextView
+                        android:id="@+id/topchartextra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif-condensed"
+                        android:paddingBottom="10dp"
+                        android:text="You listened these quite a lot"
+                        android:textColor="#9c9c9c"
+                        android:textSize="12dp"
+                        android:textStyle="bold|italic" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/htopchartsscroll1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/topchartlinearlayer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="150dp"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
 
                 </LinearLayout>
-            </HorizontalScrollView>
-        </RelativeLayout>
+            </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/test1"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_below="@+id/appLayout1"
-            android:background="#801717"></RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/playlistRelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
 
-        <RelativeLayout
-            android:id="@+id/test2"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_below="@+id/test1"
-            android:background="#000000"></RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/test3"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_below="@+id/test2"
-            android:background="#801715"></RelativeLayout>
+                    <TextView
+                        android:id="@+id/playlistshead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Your Playlists"
+                        android:textColor="#ffffff"
+                        android:textSize="18dp"
+                        android:textStyle="bold|italic" />
 
-        <RelativeLayout
-            android:id="@+id/test4"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_below="@+id/test3"
-            android:background="#ffffff"></RelativeLayout>
+                    <TextView
+                        android:id="@+id/playlistsextra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif-condensed"
+                        android:paddingBottom="10dp"
+                        android:text="You got some good collections"
+                        android:textColor="#9c9c9c"
+                        android:textSize="12dp"
+                        android:textStyle="bold|italic" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/playlisthscroll1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/playlistslinearlayer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="150dp"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/newsongsrelative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/newsongshead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="New Songs"
+                        android:textColor="#ffffff"
+                        android:textSize="18dp"
+                        android:textStyle="bold|italic" />
+
+                    <TextView
+                        android:id="@+id/newsongsextra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif-condensed"
+                        android:paddingBottom="10dp"
+                        android:text="Time for some recent adds"
+                        android:textColor="#9c9c9c"
+                        android:textSize="12dp"
+                        android:textStyle="bold|italic" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/newsongshscroll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/newsongshead"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/newsongsmainlinearlayer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/moodsRelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/moodshead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="moods"
+                        android:textColor="#ffffff"
+                        android:textSize="18dp"
+                        android:textStyle="bold|italic" />
+
+                    <TextView
+                        android:id="@+id/moodsextra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif-condensed"
+                        android:paddingBottom="10dp"
+                        android:text="Time for some recent adds"
+                        android:textColor="#9c9c9c"
+                        android:textSize="12dp"
+                        android:textStyle="bold|italic" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/moodshscroll1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/moodslinearlayer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="150dp"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/languagesrelative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/head1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Languages"
+                        android:textColor="#ffffff"
+                        android:textSize="18dp"
+                        android:textStyle="bold|italic" />
+
+                    <TextView
+                        android:id="@+id/languagesextra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="sans-serif-condensed"
+                        android:paddingBottom="10dp"
+                        android:text="Time for some recent adds"
+                        android:textColor="#9c9c9c"
+                        android:textSize="12dp"
+                        android:textStyle="bold|italic" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/hscroll1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/linearlayer1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="150dp"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/popularcontent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 </ScrollView>
