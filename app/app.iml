@@ -147,6 +147,7 @@
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-1.1.3" level="project" />
     <orderEntry type="library" name="com.android.support:slidingpanelayout-28.0.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-ui-28.0.0" level="project" />
+    <orderEntry type="library" name="__local_aars__:/home/sasikanth/Android/Sdk/build-tools/28.0.2/renderscript/lib/renderscript-v8.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-28.0.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-media-compat-28.0.0" level="project" />
     <orderEntry type="library" name="com.android.support:interpolator-28.0.0" level="project" />

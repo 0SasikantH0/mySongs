@@ -1,16 +1,27 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/maincontainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#303030"
     tools:context="mysongs.com.allgo.mysongs.MainActivity">
 
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:background="?android:attr/windowBackground"
+        android:gravity="top"
+        app:menu="@menu/navigation" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:layout_marginBottom="60dp">
+        android:layout_marginTop="60dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,20 +32,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
-                <RelativeLayout
-                    android:id="@+id/topnavigation"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginBottom="16dp">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_centerHorizontal="true"
-                        android:paddingTop="11dp"
-                        android:src="@drawable/monomainlogo" />
-                </RelativeLayout>
 
                 <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/viewpager"
@@ -340,21 +337,20 @@
                 </LinearLayout>
 
 
-
             </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/youtubevideolayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
         android:gravity="bottom"
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/youtubecontainer"
             android:layout_width="match_parent"
             android:layout_height="108dp"
             android:orientation="horizontal">
@@ -362,26 +358,18 @@
             <com.google.android.youtube.player.YouTubePlayerView
                 android:id="@+id/youtube_view"
                 android:layout_width="208dp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff">
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/layoutoptions"
+                android:orientation="vertical">
             </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
 </android.support.constraint.ConstraintLayout>

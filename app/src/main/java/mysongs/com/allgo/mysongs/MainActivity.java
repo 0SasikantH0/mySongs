@@ -57,6 +57,8 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     int recentVideoplayvisits = 0;
     long recentVideoId = 0;
     String clickedYoutubeID;
+    RelativeLayout youtubeLayout;
+    int currentPlayingId = 0;
 
     private static final int RECOVERY_REQUEST = 1;
     private YouTubePlayerView youTubeView;
@@ -96,6 +98,9 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
         youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         youTubeView.initialize(ConfigYoutube.YOUTUBE_API_KEY, MainActivity.this);
+        /** set youtube visibilty to none*/
+        youtubeLayout = findViewById(R.id.youtubevideolayout);
+        youtubeLayout.setVisibility(View.GONE);
         params.width = 400;
         params.height = 400;
         params.setMargins(0, 0, 20, 0);
@@ -292,7 +297,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                     ImageButton newButton = new ImageButton(this);
                     Cursor record = dbHelper.getData(countloops);
                     countloops++;
-                    String name = null;
+                    final String name = null;
                     String language = null;
                     String mood = null;
                     String playlist = null;
@@ -329,7 +334,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                     String videoid = extractYTId(recentVideoUrl);
 
                     String url = "https://img.youtube.com/vi/" + videoid + "/mqdefault.jpg";
-                    Bitmap myImage = getBitmapFromURL(url);
+                    final Bitmap myImage = getBitmapFromURL(url);
 
                     //Drawable dr = new BitmapDrawable(myImage);
                     RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(getResources(), myImage);
@@ -401,8 +406,8 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                              startActivity(webIntent);
                              }*/
 
-                           clickedYoutubeID = videoId;
-                           youtubePlayerHandle.loadVideo(videoId);
+                            clickedYoutubeID = videoId;
+                            playYTLinkBottom(videoId,videoName,finalvideoId);
 
                         }
                     });
@@ -448,7 +453,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                             //extraText.setText(" " + visitstoVideo);
                             visitsDb.updateContact(finalvideoId, videoName, videoUrl, videoLanguage, videoMood, videoPlaylist, visitstoVideo);
 
-/*                            Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoId));
+/*                          Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoId));
                             Intent webIntent = new Intent(Intent.ACTION_VIEW,
                                     Uri.parse("http://www.youtube.com/watch?v=" + videoId));
                             try {
@@ -459,7 +464,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
 
                             clickedYoutubeID = videoId;
-                            youtubePlayerHandle.loadVideo(videoId);
+                            playYTLinkBottom(videoId, videoName, finalvideoId);
 
                         }
                     });
@@ -498,6 +503,66 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             songsNew.addView(linearLayout);
         }
 
+    }
+
+    private void playYTLinkBottom(String videoId, String name, int videoid)
+    {
+        currentPlayingId = videoid;
+        LinearLayout.LayoutParams controls = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        /*Bitmap resultBmp = BlurBuilder.blur(MainActivity.this, myImage);
+        BitmapDrawable background = new BitmapDrawable(resultBmp);*/
+        LinearLayout ytContainer = findViewById(R.id.youtubecontainer);
+
+        //ytContainer.setBackgroundDrawable(background);
+        ytContainer.setBackgroundColor(Color.parseColor("#000000"));
+        LinearLayout ytOptions = findViewById(R.id.layoutoptions);
+        ytOptions.removeAllViews();
+
+        LinearLayout ytOptions1 = new LinearLayout(MainActivity.this);
+        LinearLayout ytOptions2 = new LinearLayout(MainActivity.this);
+        ytOptions.setOrientation(LinearLayout.VERTICAL);
+
+        Button openinYTpause = new Button(MainActivity.this);
+        Button openinYTnext = new Button(MainActivity.this);
+        Button openinYTprevious = new Button(MainActivity.this);
+
+        TextView titleText = new TextView(MainActivity.this);
+        titleText.setText(name);
+        titleText.setTextColor(Color.parseColor("#ffffff"));
+        ytOptions1.addView(titleText);
+
+        openinYTnext.setLayoutParams(controls);
+        openinYTpause.setLayoutParams(controls);
+        openinYTprevious.setLayoutParams(controls);
+
+        openinYTnext.setText("N");
+        openinYTnext.setBackgroundColor(Color.TRANSPARENT);
+        openinYTnext.setTextColor(Color.parseColor("#000000"));
+        openinYTpause.setText("||");
+        openinYTpause.setBackgroundColor(Color.TRANSPARENT);
+        openinYTpause.setTextColor(Color.parseColor("#000000"));
+        openinYTprevious.setText("P");
+        openinYTprevious.setBackgroundColor(Color.TRANSPARENT);
+        openinYTprevious.setTextColor(Color.parseColor("#000000"));
+
+
+
+        GradientDrawable buttonGD = new GradientDrawable();
+        buttonGD.setCornerRadius(1000);
+        buttonGD.setColor(Color.parseColor("#ebebeb"));
+        ytOptions2.setBackground(buttonGD);
+        ytOptions2.addView(openinYTnext);
+        ytOptions2.addView(openinYTpause);
+        ytOptions2.addView(openinYTprevious);
+        ytOptions.addView(ytOptions1);
+        ytOptions.addView(ytOptions2);
+
+        youtubeLayout.setVisibility(View.VISIBLE);
+        youtubePlayerHandle.loadVideo(videoId);
     }
 
     public static String extractYTId(String ytUrl) {
@@ -619,6 +684,32 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     @Override
     public void onVideoEnded() {
 
+        int videoDBid = currentPlayingId;
+
+        String vname = null;
+        String vurl = null;
+        String videoYTId = null;
+
+        DBHelper nextSongDB = new DBHelper(MainActivity.this);
+        videoDBid++;
+        Cursor record;
+        record = nextSongDB.getData(videoDBid);
+
+        while (record.moveToNext()) {
+            int index;
+
+            index = record.getColumnIndexOrThrow("name");
+            vname = record.getString(index);
+
+            index = record.getColumnIndexOrThrow("link");
+            vurl = record.getString(index);
+        }
+
+        videoYTId = extractYTId(vurl);
+
+        String url = "https://img.youtube.com/vi/" + videoYTId + "/mqdefault.jpg";
+        final Bitmap myImage = getBitmapFromURL(url);
+        playYTLinkBottom(videoYTId,vname,videoDBid);
     }
 
     @Override
