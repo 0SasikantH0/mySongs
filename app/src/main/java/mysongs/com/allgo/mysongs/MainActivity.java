@@ -21,6 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -36,9 +38,16 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
+import com.google.android.youtube.player.YouTubePlayerView;
+
 import static java.lang.Thread.sleep;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, YouTubePlayer.PlayerStateChangeListener {
     LinearLayout linearLayout;
     String recentVideoUrl = null;
     String recentVideoname = null;
@@ -47,7 +56,11 @@ public class MainActivity extends AppCompatActivity {
     String recentVideoplaylist = null;
     int recentVideoplayvisits = 0;
     long recentVideoId = 0;
+    String clickedYoutubeID;
 
+    private static final int RECOVERY_REQUEST = 1;
+    private YouTubePlayerView youTubeView;
+    private YouTubePlayer youtubePlayerHandle;
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -80,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
+        youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+        youTubeView.initialize(ConfigYoutube.YOUTUBE_API_KEY, MainActivity.this);
         params.width = 400;
         params.height = 400;
         params.setMargins(0, 0, 20, 0);
@@ -95,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout topChartsLayout = (LinearLayout) findViewById(R.id.topchartlinearlayer);
         /** get the list form db*/
         final DBHelper dbHelper = new DBHelper(MainActivity.this);
-        Cursor topTracksDB = dbHelper.getAllRecordsASC();
+        Cursor topTracksDB = dbHelper.getAllRecordsDESC();
         String name = null;
         String language = null;
         String mood = null;
@@ -375,15 +391,18 @@ public class MainActivity extends AppCompatActivity {
                             //extraText.setText(" " + visitstoVideo);
                             visitsDb.updateContact(finalvideoId, videoName, videoUrl, videoLanguage, videoMood, videoPlaylist, visitstoVideo);
 
-                            Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoId));
-                            Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("http://www.youtube.com/watch?v=" + videoId));
-                            try {
-                                startActivity(appIntent);
-                            } catch (ActivityNotFoundException ex) {
-                                startActivity(webIntent);
-                            }
+/*
+                             Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoId));
+                             Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                             Uri.parse("http://www.youtube.com/watch?v=" + videoId));
+                             try {
+                             startActivity(appIntent);
+                             } catch (ActivityNotFoundException ex) {
+                             startActivity(webIntent);
+                             }*/
 
+                           clickedYoutubeID = videoId;
+                           youtubePlayerHandle.loadVideo(videoId);
 
                         }
                     });
@@ -429,14 +448,18 @@ public class MainActivity extends AppCompatActivity {
                             //extraText.setText(" " + visitstoVideo);
                             visitsDb.updateContact(finalvideoId, videoName, videoUrl, videoLanguage, videoMood, videoPlaylist, visitstoVideo);
 
-                            Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoId));
+/*                            Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoId));
                             Intent webIntent = new Intent(Intent.ACTION_VIEW,
                                     Uri.parse("http://www.youtube.com/watch?v=" + videoId));
                             try {
                                 startActivity(appIntent);
                             } catch (ActivityNotFoundException ex) {
                                 startActivity(webIntent);
-                            }
+                            }*/
+
+
+                            clickedYoutubeID = videoId;
+                            youtubePlayerHandle.loadVideo(videoId);
 
                         }
                     });
@@ -559,5 +582,47 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         super.onPause();
+    }
+
+    @Override
+    public void onInitializationSuccess(Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
+        if (!wasRestored) {
+            this.youtubePlayerHandle = youTubePlayer;
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+    }
+
+    @Override
+    public void onLoading() {
+
+    }
+
+    @Override
+    public void onLoaded(String s) {
+        this.youtubePlayerHandle.play();
+    }
+
+    @Override
+    public void onAdStarted() {
+
+    }
+
+    @Override
+    public void onVideoStarted() {
+
+    }
+
+    @Override
+    public void onVideoEnded() {
+
+    }
+
+    @Override
+    public void onError(YouTubePlayer.ErrorReason errorReason) {
+
     }
 }
