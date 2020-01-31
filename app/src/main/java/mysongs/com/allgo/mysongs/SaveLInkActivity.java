@@ -1,5 +1,6 @@
 package mysongs.com.allgo.mysongs;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -231,19 +233,54 @@ public class SaveLInkActivity extends AppCompatActivity {
         addLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                /** opening youtube links*/
+
+                DBHelper addLinkDB = new DBHelper(SaveLInkActivity.this);
+                EditText linkEditText = findViewById(R.id.editText2);
+                EditText nameEditText = findViewById(R.id.editText);
+                String videoName = nameEditText.getText().toString();
+
+                String words[] = videoName.split("\\s");
+                String capitalizeWord="";
+                for(String w:words){
+                    String first=w.substring(0,1);
+                    String afterfirst=w.substring(1);
+                    capitalizeWord+=first.toUpperCase()+afterfirst+" ";
+                }
+                addLinkDB.insertContact(capitalizeWord,
+                        linkEditText.getText().toString(), whichLanguageButtonCLicked,
+                        whichMoodButtonCLicked, whichPlaylistButtonCLicked, 0);
+
+
+
 /*                String videoId = new String();
                 EditText linkEditText = findViewById(R.id.editText2);
                 String link = linkEditText.getText().toString();
                 videoId = extractYTId(link);
+                Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoId));
+                Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://www.youtube.com/watch?v=" + videoId));
+                try {
+                    startActivity(appIntent);
+                } catch (ActivityNotFoundException ex) {
+                    startActivity(webIntent);
+                }*/
+            /*  videoId = extractYTId(link);
                 String url = "https://img.youtube.com/vi/" + videoId + "/0.jpg";
                 Bitmap myImage = getBitmapFromURL(url);
                 Button testButton = findViewById(R.id.addlinkbutton);
 
                 Drawable dr = new BitmapDrawable(myImage);
                 testButton.setBackgroundDrawable(dr);*/
+                Intent i = new Intent(SaveLInkActivity.this,
+                        MainActivity.class);
+                i.setAction(i.ACTION_SEND);
+                //Intent is used to switch from one activity to another.
+                startActivity(i);
+                //invoke the SecondActivity.
 
-
-                //finish();*/
+                finish();
 
             }
         });

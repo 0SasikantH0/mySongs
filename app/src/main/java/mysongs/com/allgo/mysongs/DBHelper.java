@@ -104,4 +104,12 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return array_list;
     }
+
+    public Cursor getAllRecordsASC()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM songs  ORDER BY  nvisits ASC LIMIT 6", null);
+        res.moveToFirst();
+        return res;
+    }
 }

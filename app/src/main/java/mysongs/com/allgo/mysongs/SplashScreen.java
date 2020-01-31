@@ -3,6 +3,7 @@ package mysongs.com.allgo.mysongs;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+
+import java.util.ArrayList;
 
 /**
  * Created by sasikanth on 12/27/19.
@@ -38,52 +41,51 @@ public class SplashScreen extends AppCompatActivity {
  | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
  | View.SYSTEM_UI_FLAG_FULLSCREEN);
  */
-        if(activity == 1)
-        {
 
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            //This method is used so that your splash activity
-            //can cover the entire screen.
 
-            setContentView(R.layout.splashscreen);
-            //this will bind your MainActivity.class file with activity_main.
+            if (activity == 1) {
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(SplashScreen.this,
-                            MainActivity.class);
-                    //Intent is used to switch from one activity to another.
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                //This method is used so that your splash activity
+                //can cover the entire screen.
 
-                    startActivity(i);
-                    //invoke the SecondActivity.
+                setContentView(R.layout.splashscreen);
+                //this will bind your MainActivity.class file with activity_main.
 
-                    finish();
-                    //the current activity will get finished.
-                }
-            }, SPLASH_SCREEN_TIME_OUT);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(SplashScreen.this,
+                                MainActivity.class);
+                        //Intent is used to switch from one activity to another.
+
+                        startActivity(i);
+                        //invoke the SecondActivity.
+
+                        finish();
+                        //the current activity will get finished.
+                    }
+                }, SPLASH_SCREEN_TIME_OUT);
+            } else {
+
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(SplashScreen.this,
+                                MainActivity.class);
+                        //Intent is used to switch from one activity to another.
+
+                        startActivity(i);
+                        //invoke the SecondActivity.
+                        finish();
+                        //the current activity will get finished.
+                    }
+                });
+
+            }
+            activity++;
         }
-        else
-        {
-
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(SplashScreen.this,
-                            MainActivity.class);
-                    //Intent is used to switch from one activity to another.
-
-                    startActivity(i);
-                    //invoke the SecondActivity.
-                    finish();
-                    //the current activity will get finished.
-                }
-            });
-
-        }
-        activity++;
-    }
 
     @Override
     protected void onPause() {
