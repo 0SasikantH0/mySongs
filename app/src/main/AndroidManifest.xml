@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashScreen"
+            android:icon="@drawable/mainlogo"
             android:theme="@style/Theme.AppCompat.NoActionBar">
 
             <intent-filter>
@@ -25,10 +26,13 @@
 
         <activity
             android:name=".MainActivity"
+            android:icon="@drawable/mainlogo"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:launchMode="singleTask">
         </activity>
+
         <activity android:name=".SaveLInkActivity"
+            android:icon="@drawable/mainlogo"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
