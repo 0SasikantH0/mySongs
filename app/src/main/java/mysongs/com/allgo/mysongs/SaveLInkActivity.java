@@ -42,6 +42,7 @@ import static java.lang.Thread.sleep;
 
 public class SaveLInkActivity extends AppCompatActivity {
     EditText editText;
+    EditText editName;
     LinearLayout linearLayout;
     Button addLinkButton = null;
     int addButtonLanguageClicks = 0;
@@ -81,14 +82,50 @@ public class SaveLInkActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         editText = findViewById(R.id.editText2);
+        editName = findViewById(R.id.editText);
         Bundle extras = getIntent().getExtras();
         if(extras!=null)
         {
             String link = extras.getString(Intent.EXTRA_TEXT);
-            TextView newButton = new TextView(this);
+            if(link.contains("amazon")) {
+                String[] splitLink = link.split("https");
+                String[] splitName = splitLink[0].split("Check out ");
+                int byIndex;
+                String songName;
+            /*TextView newButton = new TextView(this);
             newButton.setText(link);
-            newButton.setTextColor(Color.parseColor("#1fc5f2"));
-            editText.setText(link);
+            newButton.setTextColor(Color.parseColor("#1fc5f2"));*/
+                byIndex = splitName[1].lastIndexOf(" by ");
+                songName = splitName[1].substring(0, byIndex);
+                editName.setText(songName);
+                editText.setText("https" + splitLink[1]);
+            }
+            else if(link.contains("spotify")) {
+                String[] splitLink = link.split("https");
+                //String[] splitName = splitLink[0].split("");
+                int startIndex;
+                int endIndex;
+                String songName;
+                /*
+            *//*TextView newButton = new TextView(this);
+                newButton.setText(link);
+                newButton.setTextColor(Color.parseColor("#1fc5f2"));*//*
+                byIndex = splitName[1].lastIndexOf(" by ");
+                songName = splitName[1].substring(0, byIndex);*/
+                startIndex = splitLink[0].indexOf("for you");
+                startIndex+=9;
+                endIndex = splitLink[0].lastIndexOf(" by ");
+                songName = splitLink[0].substring(startIndex,endIndex);
+                editName.setText(songName);
+                editText.setText("https" + splitLink[1]);
+
+            }
+            else
+            {
+
+                editText.setText(link);
+            }
+            //editText.setText(link);
         }
         linearLayout = (LinearLayout) findViewById(R.id.languagelinearlayer);        //Adding 2 TextViews
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(

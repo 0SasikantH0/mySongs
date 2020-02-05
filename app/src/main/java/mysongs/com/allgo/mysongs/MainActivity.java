@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -26,6 +27,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.Selector;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +49,10 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
+
+import com.leocardz.link.preview.library.LinkPreviewCallback;
+import com.leocardz.link.preview.library.SourceContent;
+import com.leocardz.link.preview.library.TextCrawler;
 
 import static java.lang.Thread.sleep;
 
@@ -67,6 +74,10 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     private static final int RECOVERY_REQUEST = 1;
     private YouTubePlayerView youTubeView;
     private YouTubePlayer youtubePlayerHandle;
+
+    String imgurl;
+
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +120,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         playbackEventListener = new MyPlaybackEventListener();
 
         params.width = 400;
-        params.height = 400;
+        params.height = 250;
         params.setMargins(0, 0, 20, 0);
 
         linearLayout = (LinearLayout) findViewById(R.id.linearlayer1);        //Adding 2 TextViews
@@ -121,6 +132,9 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         }
 
         LinearLayout topChartsLayout = (LinearLayout) findViewById(R.id.topchartlinearlayer);
+        LinearLayout topChartsLayout2 = (LinearLayout) findViewById(R.id.topchartlinearlayer2);
+        LinearLayout topOfTopCharts = (LinearLayout) findViewById(R.id.topoftopcharts);
+
         /** get the list form db*/
         final DBHelper dbHelper = new DBHelper(MainActivity.this);
         Cursor topTracksDB = dbHelper.getAllRecordsDESC();
@@ -131,10 +145,11 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         String link = null;
         int nvisits = 0;
         long id = 0;
+        int topTracksCount = 0;
 
         while (topTracksDB.moveToNext()) {
             int index;
-
+            topTracksCount ++;
             index = topTracksDB.getColumnIndexOrThrow("name");
             name = topTracksDB.getString(index);
 
@@ -158,26 +173,97 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
 
             String videoid = extractYTId(link);
-            String url = "https://img.youtube.com/vi/" + videoid + "/0.jpg";
+            final String url = "https://img.youtube.com/vi/" + videoid + "/0.jpg";
 
-            Bitmap myImage = getBitmapFromURL(url);
+            final ImageButton newButton = new ImageButton(this);
 
-            //Drawable dr = new BitmapDrawable(myImage);
-            RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(getResources(), myImage);
+            TextCrawler textCrawler = new TextCrawler();
 
-            RBD.setCornerRadius(10.0f);
-            RBD.setAntiAlias(true);
-            GradientDrawable buttonGD = new GradientDrawable();
-            buttonGD.setColor(Color.parseColor("#303030"));
-            buttonGD.setCornerRadius(10.0f);
-            ImageButton newButton = new ImageButton(this);
-            newButton.setImageDrawable(RBD);
-            newButton.setBackground(buttonGD);
+            LinkPreviewCallback linkPreviewCallback = new LinkPreviewCallback() {
+                @Override
+                public void onPre() {
+                    // Any work that needs to be done before generating the preview. Usually inflate
+                    // your custom preview layout here.
+                }
+
+                @Override
+                public void onPos(SourceContent sourceContent, boolean b) {
+                    // Populate your preview layout with the results of sourceContent.
+                    List<String> imgList = sourceContent.getImages();
+
+                    if(imgList.size() >= 1)
+                    {
+                        Bitmap myImage;
+                        //myImage = getBitmapFromURL(imgList.get(1));
+                        myImage = getBitmapFromURL(imgList.get(imgList.size()-1));
+                        //Drawable dr = new BitmapDrawable(myImage);
+                        RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(getResources(), myImage);
+                        RBD.setCornerRadius(10.0f);
+                        RBD.setAntiAlias(true);
+
+                        newButton.setScaleType(ImageView.ScaleType.FIT_XY);
+                        newButton.setImageDrawable(RBD);
+                        newButton.setPaddingRelative(0,0,0,0);
+                    }
+                }
+            };
+
             newButton.setLayoutParams(params);
-            topChartsLayout.addView(newButton);
+            //TextView testText = findViewById(R.id.topcharthead);
+            if (link.contains("amazon")) {
+                //myImage[0] = getBitmapFromURL(imgurl);
+
+                TextView testText = findViewById(R.id.topcharthead);
+                String[] amazonEmbdLInk = link.replace("albums","embed").split("\\?");
+                textCrawler.makePreview( linkPreviewCallback, amazonEmbdLInk[0]);
+            }
+            else if(link.contains("spotify"))
+            {
+                textCrawler.makePreview( linkPreviewCallback, "https://open.spotify.com/track/0dnDTvdUco2UbaBjUtPxNS");
+            }
+            else {
+                /*Bitmap myImage;
+                //myImage = getBitmapFromURL(imgList.get(1));
+                myImage = getBitmapFromURL(url);
+                //Drawable dr = new BitmapDrawable(myImage);
+
+                RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(getResources(), myImage);
+                RBD.setCornerRadius(10.0f);
+                RBD.setAntiAlias(true);
+
+                newButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                newButton.setImageDrawable(RBD);*/
+                textCrawler.makePreview( linkPreviewCallback, "https://img.youtube.com/vi/" + videoid + "/0.jpg");
+            }
+
+            GradientDrawable buttonGD = new GradientDrawable();
+
+            buttonGD.setColor(Color.TRANSPARENT);
+            //buttonGD.setColor(Color.parseColor("#ffffff"));
+            buttonGD.setCornerRadius(10.0f);
+            newButton.setBackground(buttonGD);
+            newButton.setPaddingRelative(0,0,0,0);
+            if (topTracksCount == 1) {
+                LinearLayout.LayoutParams topoftopchartsparams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                topoftopchartsparams.width = 550;
+                topoftopchartsparams.height = 550;
+                topoftopchartsparams.setMargins(0,0,20,0);
+
+                newButton.setLayoutParams(topoftopchartsparams);
+                topOfTopCharts.addView(newButton);
+            } else if(topTracksCount > 1 && topTracksCount <= 6) {
+                topChartsLayout.addView(newButton);
+            }
+            else
+            {
+                topChartsLayout2.addView(newButton);
+            }
         }
 
-
+        /** change back for other layouts*/
         updateNewSongs();
 
         LinearLayout playlistLayout = (LinearLayout) findViewById(R.id.playlistslinearlayer);
@@ -347,7 +433,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
                     }
 
-                    ImageButton newButton = new ImageButton(this);
+                    final ImageButton newButton = new ImageButton(this);
 
                     /** extract image from url*/
 
@@ -375,28 +461,50 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                     nonYTThumparam.leftMargin = 10;
                     nonYTThumparam.topMargin = 10;
                     nonYTThumparam.bottomMargin = 10;
+                    TextCrawler textCrawler = new TextCrawler();
+                    LinkPreviewCallback linkPreviewCallback = new LinkPreviewCallback() {
+                        @Override
+                        public void onPre() {
+
+                        }
+
+                        @Override
+                        public void onPos(SourceContent sourceContent, boolean b) {
+                            List<String> imgList = sourceContent.getImages();
+
+                            if(imgList.size() >= 1)
+                            {
+                                Bitmap myImage;
+                                myImage = getBitmapFromURL(imgList.get(imgList.size()-1));
+                                RoundedBitmapDrawable RBD = RoundedBitmapDrawableFactory.create(getResources(), myImage);
+                                RBD.setCornerRadius(1000.0f);
+                                RBD.setAntiAlias(true);
+                                newButton.setScaleType(ImageView.ScaleType.FIT_XY);
+                                newButton.setImageDrawable(RBD);
+                            }
+                        }
+                    };
+
                     if (recentVideoUrl.contains("amazon")) {
-                        //newButton.setPadding(0,40,0,40);
+                        TextView testText = findViewById(R.id.topcharthead);
+                        String[] amazonEmbdLInk = recentVideoUrl.replace("albums", "embed").split("\\?");
+                        textCrawler.makePreview(linkPreviewCallback, amazonEmbdLInk[0]);
                         GradientDrawable buttonGD = new GradientDrawable();
                         buttonGD.setCornerRadius(100.0f);
-                        buttonGD.setColor(Color.parseColor("#270075"));
-
-
+                        //buttonGD.setColor(Color.TRANSPARENT);
+                        buttonGD.setColor(Color.parseColor("#000000"));
                         newButton.setLayoutParams(nonYTThumparam);
-                        //newButton.setBackground(gradDrawable);
-                        newButton.setImageDrawable(gradDrawable);
+                        newButton.setPaddingRelative(0,0,0,0);
                         newButton.setBackground(buttonGD);
 
                     } else {
                         newButton.setImageDrawable(RBD);
-
-                    GradientDrawable buttonGD = new GradientDrawable();
-                    buttonGD.setCornerRadius(100.0f);
-                    buttonGD.setColor(Color.parseColor("#ebebeb"));
-                    newButton.setBackground(buttonGD);
-                    //newButton.setBackgroundResource(R.drawable.test_image3);
-                    newButton.setLayoutParams(paramsNewSongs);
-                }
+                        GradientDrawable buttonGD = new GradientDrawable();
+                        buttonGD.setCornerRadius(100.0f);
+                        buttonGD.setColor(Color.parseColor("#ebebeb"));
+                        newButton.setBackground(buttonGD);
+                        newButton.setLayoutParams(paramsNewSongs);
+                    }
                     final String videoUrl = recentVideoUrl;
                     final String videoName = recentVideoname;
                     final String videoLanguage = recentVideolanguage;
@@ -419,7 +527,12 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                     extraText.setTextColor(Color.parseColor("#525252"));
                     if (videoUrl.contains("youtu.be")) {
                         extraText.setText("Youtube");
-                    } else {
+                    } else if (videoUrl.contains("amazon"))
+                    {
+                        extraText.setText("Prime Music");
+                    }
+                    else
+                    {
                         extraText.setText("Unknown");
                     }
 
@@ -456,9 +569,14 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
                             clickedYoutubeID = videoId;
                             if(videoUrl.contains("amazon")) {
+
+
+
                                 String[] arr = videoUrl.split("(?<=https)");
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https"+arr[1]));
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
                                 startActivity(browserIntent);
+                             /*   WebView myWebView = (WebView) findViewById(R.id.webview);
+                                myWebView.loadUrl("https://music.amazon.in/albums/B07YXYZN1R");*/
                             }
                             else
                             {
@@ -479,6 +597,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                             LinearLayout.LayoutParams.WRAP_CONTENT
                     );
                     paramsLayoutSongs.width = 800;
+                    paramsLayoutSongs.height = 230;
                     paramsLayoutSongs.setMargins(0, 40, 70, 0);
                     linearLayout1.setLayoutParams(paramsLayoutSongs);
                     linearLayout1.addView(newButton);
@@ -522,7 +641,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                             clickedYoutubeID = videoId;
                             if(videoUrl.contains("amazon")) {
                                 String[] arr = videoUrl.split("(?<=https)");
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https"+arr[1]));
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
                                 startActivity(browserIntent);
                             }
                             else
@@ -576,7 +695,6 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
     private void playYTLinkBottom(String videoId, String name, int videoid)
     {
-        //startActivity(new Intent("com.amazon.mp3/.client.activity.LauncherActivity"));
         currentPlayingId = videoid;
         LinearLayout.LayoutParams controls = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -608,24 +726,15 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                 LinearLayout.LayoutParams.MATCH_PARENT
         );
         optionParam.gravity = Gravity.CENTER;
-       /* WebView testview = findViewById(R.id.webview);
-        testview.loadUrl("https://music.amazon.com/embed/B084D81N52/?id=dLKS2MfXsj&marketplaceId=ATVPDKIKX0DER&musicTerritory=US");
-        */
-       /*Bitmap resultBmp = BlurBuilder.blur(MainActivity.this, myImage);
-        BitmapDrawable background = new BitmapDrawable(resultBmp);*/
         LinearLayout ytContainer = findViewById(R.id.youtubecontainer);
 
-        //ytContainer.setBackgroundDrawable(background);
         ytContainer.setBackgroundColor(Color.parseColor("#000000"));
-        //ytContainer.setGravity(Gravity.CENTER_HORIZONTAL);
         LinearLayout ytOptions = findViewById(R.id.layoutoptions);
         ytOptions.removeAllViews();
 
         LinearLayout ytOptions1 = new LinearLayout(MainActivity.this);
         LinearLayout ytOptions2 = new LinearLayout(MainActivity.this);
         ytOptions.setOrientation(LinearLayout.VERTICAL);
-        //ytOptions.setLayoutParams(optionParam);
-        //ytOptions.setGravity(Gravity.CENTER_HORIZONTAL);
 
         final Button openinYTpause = new Button(MainActivity.this);
         Button openinYTnext = new Button(MainActivity.this);
@@ -640,14 +749,10 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         openinYTpause.setLayoutParams(controls);
         openinYTprevious.setLayoutParams(controlsTrack);
 
-        //openinYTnext.setText("N");
-        //openinYTnext.setBackgroundColor(Color.TRANSPARENT);
         openinYTnext.setBackgroundResource(R.drawable.nexttrack);
         openinYTnext.setTextColor(Color.parseColor("#000000"));
-        //openinYTpause.setText("||");
         openinYTpause.setBackgroundResource(R.drawable.pause);
         openinYTpause.setTextColor(Color.parseColor("#000000"));
-        //openinYTprevious.setText("P");
         openinYTprevious.setBackgroundResource(R.drawable.previoustrack);
 
         openinYTprevious.setTextColor(Color.parseColor("#000000"));
@@ -671,7 +776,6 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                 {
                     openinYTpause.setBackgroundResource(R.drawable.pause);
                     youtubePlayerHandle.play();
-
                 }
             }
         });
@@ -679,7 +783,6 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         ytOptions2.addView(openinYTprevious);
         ytOptions2.addView(openinYTpause);
         ytOptions2.addView(openinYTnext);
-        //ytOptions.setVerticalGravity(Gravity.RIGHT);
         ytOptions.addView(ytOptions1);
         ytOptions.addView(ytOptions2);
 
@@ -719,7 +822,24 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             cropH = (cropH < 0) ? 0 : cropH;
             Bitmap cropImg = Bitmap.createBitmap(myBitmap, cropW, cropH, newWidth, newHeight);
 
-            return cropImg;
+ /*           int width2 = cropImg.getWidth();
+            int height2 = cropImg.getHeight();
+
+            float scaleWidth = ((float) 250) / width2;
+            float scaleHeight = ((float) 250) / height2;
+
+// CREATE A MATRIX FOR THE MANIPULATION
+            Matrix matrix = new Matrix();
+
+// RESIZE THE BIT MAP
+            matrix.postScale(scaleWidth, scaleHeight);
+
+// RECREATE THE NEW BITMAP
+            Bitmap resizeBitmap = Bitmap.createBitmap(cropImg, 0, 0, width2, height2, matrix, false);
+
+            return resizeBitmap;*/
+
+            return  cropImg;
         } catch (IOException e) {
             e.printStackTrace();
             return null;

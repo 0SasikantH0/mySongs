@@ -108,7 +108,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getAllRecordsDESC()
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM songs  ORDER BY  nvisits DESC LIMIT 6", null);
+        Cursor res = db.rawQuery("SELECT * FROM songs  ORDER BY  nvisits DESC LIMIT 12", null);
         //res.moveToFirst();
         return res;
     }
