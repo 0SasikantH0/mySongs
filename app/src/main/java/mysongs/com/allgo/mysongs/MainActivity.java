@@ -121,7 +121,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
         params.width = 400;
         params.height = 250;
-        params.setMargins(0, 0, 20, 0);
+        params.setMargins(0, 0, 40, 0);
 
         linearLayout = (LinearLayout) findViewById(R.id.linearlayer1);        //Adding 2 TextViews
         for (int i = 0; i < 5; i++) {
@@ -243,23 +243,40 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             buttonGD.setCornerRadius(10.0f);
             newButton.setBackground(buttonGD);
             newButton.setPaddingRelative(0,0,0,0);
+
+            LinearLayout topBtnWrapLayout = new LinearLayout(MainActivity.this);
+            topBtnWrapLayout.setOrientation(LinearLayout.VERTICAL);
+
+            TextView topBtnText = new TextView(MainActivity.this);
+            topBtnText.setText(name);
+            topBtnText.setTextColor(Color.parseColor("#ffffff"));
+            topBtnText.setGravity(Gravity.CENTER);
+
             if (topTracksCount == 1) {
                 LinearLayout.LayoutParams topoftopchartsparams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
-                topoftopchartsparams.width = 550;
-                topoftopchartsparams.height = 550;
-                topoftopchartsparams.setMargins(0,0,20,0);
+                topoftopchartsparams.width = 600;
+                topoftopchartsparams.height = 600;
+                topoftopchartsparams.setMargins(0,0,40,0);
 
                 newButton.setLayoutParams(topoftopchartsparams);
-                topOfTopCharts.addView(newButton);
+                topBtnWrapLayout.addView(newButton);
+                topBtnWrapLayout.addView(topBtnText);
+
+                topOfTopCharts.addView(topBtnWrapLayout);
             } else if(topTracksCount > 1 && topTracksCount <= 6) {
-                topChartsLayout.addView(newButton);
+                topBtnWrapLayout.addView(newButton);
+                topBtnWrapLayout.addView(topBtnText);
+                topChartsLayout.addView(topBtnWrapLayout);
             }
             else
             {
-                topChartsLayout2.addView(newButton);
+                topBtnWrapLayout.addView(newButton);
+                topBtnWrapLayout.addView(topBtnText);
+                topChartsLayout2.addView(topBtnWrapLayout);
+                topChartsLayout2.setPadding(0,20,0,0);
             }
         }
 
