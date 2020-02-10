@@ -14,7 +14,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
@@ -77,6 +79,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
     String imgurl;
 
+    private static final int DRAW_OVER_OTHER_APP_PERMISSION = 123;
 
     @SuppressLint("ResourceType")
     @Override
@@ -109,7 +112,6 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-
 
         youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         youTubeView.initialize(ConfigYoutube.YOUTUBE_API_KEY, MainActivity.this);
@@ -366,6 +368,17 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
     }
 
+
+    private void askForSystemOverlayPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, DRAW_OVER_OTHER_APP_PERMISSION);
+        }
+    }
 
     private void updateNewSongs()
     {
@@ -696,7 +709,12 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     //Intent is used to switch from one activity to another.
-                    startActivity(new Intent(MainActivity.this, SaveLInkActivity.class));
+                    //startActivity(new Intent(MainActivity.this, SaveLInkActivity.class));
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(MainActivity.this)) {
+                        startService(new Intent(MainActivity.this, FloatingWidgetService.class));
+                    } else {
+                        errorToast();
+                    }
                 }
             });
             songsNew.setPadding(0, 0, 0, 140);
@@ -906,7 +924,35 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         super.onPause();
+        // To prevent starting the service if the required permission is NOT granted.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)) {
+            startService(new Intent(MainActivity.this, FloatingWidgetService.class).putExtra("activity_background", true));
+            finish();
+        } else {
+            errorToast();
+        }
     }
+
+    private void errorToast() {
+        Toast.makeText(this, "Draw over other app permission not available. Can't start the application without the permission.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(this)) {
+                    //Permission is not available. Display error text.
+                    errorToast();
+                    finish();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 
     @Override
     public void onInitializationSuccess(Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
