@@ -121,7 +121,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
         params.width = 400;
         params.height = 250;
-        params.setMargins(0, 0, 40, 0);
+        params.setMargins(0, 0, 0, 0);
 
         linearLayout = (LinearLayout) findViewById(R.id.linearlayer1);        //Adding 2 TextViews
         for (int i = 0; i < 5; i++) {
@@ -219,7 +219,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             }
             else if(link.contains("spotify"))
             {
-                textCrawler.makePreview( linkPreviewCallback, "https://open.spotify.com/track/0dnDTvdUco2UbaBjUtPxNS");
+                //textCrawler.makePreview( linkPreviewCallback, "https://open.spotify.com/track/0dnDTvdUco2UbaBjUtPxNS");
             }
             else {
                 /*Bitmap myImage;
@@ -239,6 +239,10 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             GradientDrawable buttonGD = new GradientDrawable();
 
             buttonGD.setColor(Color.TRANSPARENT);
+            if(link.contains("spotify"))
+            {
+                buttonGD.setColor(Color.parseColor("#0aa83a"));
+            }
             //buttonGD.setColor(Color.parseColor("#ffffff"));
             buttonGD.setCornerRadius(10.0f);
             newButton.setBackground(buttonGD);
@@ -250,25 +254,49 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
             TextView topBtnText = new TextView(MainActivity.this);
             topBtnText.setText(name);
             topBtnText.setTextColor(Color.parseColor("#ffffff"));
-            topBtnText.setGravity(Gravity.CENTER);
+            topBtnText.setPadding(0,20,0,0);
+            topBtnText.setGravity(Gravity.CENTER_HORIZONTAL);
+            //topBtnText.setBackgroundColor(Color.parseColor("#000000"));
+            final String finalLink = link;
+            final String finalName = name;
+            final long finalId = id;
+            final String finalLink1 = link;
+            newButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                    clickedYoutubeID = extractYTId(finalLink1);
+                    if(finalLink.contains("amazon")) {
+
+                        playAmazonLink(finalLink);
+                    }
+                    else
+                    {
+                        playYTLinkBottom(clickedYoutubeID, finalName, (int)finalId);
+                    }
+
+                }
+            });
             if (topTracksCount == 1) {
                 LinearLayout.LayoutParams topoftopchartsparams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
-                topoftopchartsparams.width = 600;
-                topoftopchartsparams.height = 600;
-                topoftopchartsparams.setMargins(0,0,40,0);
+                topoftopchartsparams.width = 700;
+                topoftopchartsparams.height = 700;
+                //topoftopchartsparams.setMargins(0,0,100,0);
 
-                newButton.setLayoutParams(topoftopchartsparams);
+                 newButton.setLayoutParams(topoftopchartsparams);
+                topBtnText.setTextSize(18);
+                topBtnText.setPadding(0,40,0,0);
                 topBtnWrapLayout.addView(newButton);
                 topBtnWrapLayout.addView(topBtnText);
-
+                topBtnWrapLayout.setPadding(0,0,100,0);
                 topOfTopCharts.addView(topBtnWrapLayout);
             } else if(topTracksCount > 1 && topTracksCount <= 6) {
                 topBtnWrapLayout.addView(newButton);
                 topBtnWrapLayout.addView(topBtnText);
+                topBtnWrapLayout.setPadding(0,0,80,0);
                 topChartsLayout.addView(topBtnWrapLayout);
             }
             else
@@ -276,18 +304,24 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                 topBtnWrapLayout.addView(newButton);
                 topBtnWrapLayout.addView(topBtnText);
                 topChartsLayout2.addView(topBtnWrapLayout);
-                topChartsLayout2.setPadding(0,20,0,0);
+                topBtnWrapLayout.setPadding(0,0,80,0);
+                topChartsLayout2.setPadding(0,90,0,0);
             }
         }
 
-        /** change back for other layouts*/
         updateNewSongs();
-
+        LinearLayout.LayoutParams paramsPlaylistSongs = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        paramsPlaylistSongs.width = 400;
+        paramsPlaylistSongs.height = 400;
         LinearLayout playlistLayout = (LinearLayout) findViewById(R.id.playlistslinearlayer);
         for (int i = 0; i < 5; i++) {
             Button newButton = new Button(this);
             newButton.setBackgroundResource(R.drawable.test_image);
-            newButton.setLayoutParams(params);
+            
+            newButton.setLayoutParams(paramsPlaylistSongs);
             playlistLayout.addView(newButton);
         }
 
@@ -413,7 +447,6 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                 numberOfRows = numberOfRows - 5;
                 for (int j = 0; j < countRowsLoop; j++) {
                     final LinearLayout linearLayout1 = new LinearLayout(this);
-
 
                     Cursor record = dbHelper.getData(countloops);
                     countloops++;
@@ -587,11 +620,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
                             clickedYoutubeID = videoId;
                             if(videoUrl.contains("amazon")) {
 
-
-
-                                String[] arr = videoUrl.split("(?<=https)");
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
-                                startActivity(browserIntent);
+                                playAmazonLink(videoUrl);
                              /*   WebView myWebView = (WebView) findViewById(R.id.webview);
                                 myWebView.loadUrl("https://music.amazon.in/albums/B07YXYZN1R");*/
                             }
@@ -657,9 +686,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
                             clickedYoutubeID = videoId;
                             if(videoUrl.contains("amazon")) {
-                                String[] arr = videoUrl.split("(?<=https)");
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
-                                startActivity(browserIntent);
+                                playAmazonLink(videoUrl);
                             }
                             else
                             {
@@ -708,6 +735,8 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
     private void playAmazonLink(String link)
     {
 
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        startActivity(browserIntent);
     }
 
     private void playYTLinkBottom(String videoId, String name, int videoid)
@@ -740,7 +769,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
 
         LinearLayout.LayoutParams optionParam = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                LinearLayout.LayoutParams.WRAP_CONTENT
         );
         optionParam.gravity = Gravity.CENTER;
         LinearLayout ytContainer = findViewById(R.id.youtubecontainer);
@@ -750,6 +779,7 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         ytOptions.removeAllViews();
 
         LinearLayout ytOptions1 = new LinearLayout(MainActivity.this);
+        ytOptions1.setOrientation(LinearLayout.VERTICAL);
         LinearLayout ytOptions2 = new LinearLayout(MainActivity.this);
         ytOptions.setOrientation(LinearLayout.VERTICAL);
 
@@ -760,7 +790,17 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         TextView titleText = new TextView(MainActivity.this);
         titleText.setText(name);
         titleText.setTextColor(Color.parseColor("#ffffff"));
+        titleText.setTextSize(16);
+        titleText.setPadding(0,0,0,5);
         ytOptions1.addView(titleText);
+
+        TextView extraText = new TextView(MainActivity.this);
+        extraText.setText("Youtube");
+        extraText.setTextColor(Color.parseColor("#808080"));
+        extraText.setPadding(0,0,0,30);
+        ytOptions1.addView(extraText);
+        ytOptions1.setPadding(70,30,0,0);
+
 
         openinYTnext.setLayoutParams(controlsTrack);
         openinYTpause.setLayoutParams(controls);
@@ -800,6 +840,12 @@ public class MainActivity extends YouTubeBaseActivity implements YouTubePlayer.O
         ytOptions2.addView(openinYTprevious);
         ytOptions2.addView(openinYTpause);
         ytOptions2.addView(openinYTnext);
+
+        LinearLayout.LayoutParams optionsParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        ytOptions.setLayoutParams(optionsParams);
         ytOptions.addView(ytOptions1);
         ytOptions.addView(ytOptions2);
 
